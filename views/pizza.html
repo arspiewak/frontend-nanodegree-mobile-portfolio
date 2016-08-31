@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
   <meta name="description" content="Portfolio project, Pizzeria">
   <meta name="author" content="Cameron Pittman. Performance optimization by Alan Spiewak">
+  <meta name="mobile-web-app-capable" content="yes">
   <title>Cameron Pittman: Portfolio</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/bootstrap-grid.css">
@@ -41,7 +42,13 @@
     </div>
     <div id="callToAction" class="row">
       <div class="col-md-4">
-        <img src="images/pizzeria.jpg" class="img-responsive" alt="Pizzeria"> <!-- Image credit to: http://commons.wikimedia.org/wiki/File:HK_TST_night_%E5%98%89%E8%98%AD%E9%81%93_Granville_Road_restaurant_Paisano's_Pizzeria_pizza_Dec-2013.JPG -->
+        <!-- The original pizzeria.jpg is ridiculously large (2048x1536), so we
+             can offer the browser some pretty-high-res choices. Display width
+             maxes out at 720px (mobile) and 360px (desktop). -->
+        <img srcset="../dist/img/pizzeria_1440.jpg 1440w, ../dist/img/pizzeria_720.jpg 720w, ../dist/img/pizzeria_360.jpg 360w"
+          sizes="(min-width: 992) 360px, (min-width: 720) 720px, 100vw"
+          src="images/pizzeria.jpg" class="img-responsive" alt="Pizzeria">
+        <!-- Image credit to: http://commons.wikimedia.org/wiki/File:HK_TST_night_%E5%98%89%E8%98%AD%E9%81%93_Granville_Road_restaurant_Paisano's_Pizzeria_pizza_Dec-2013.JPG -->
       </div>
       <div class="col-md-8">
         <div class="row">
@@ -109,7 +116,7 @@
         <div id="randomPizzas" class="row">
           <div id="pizza0" class="randomPizzaContainer" style="width:33.33%; height: 325px;">
             <div style="width:35%">
-              <img src="images/pizza.png" class="img-responsive" alt="Pizza">
+              <img src="../dist/img/pizza_205.png" class="img-responsive" alt="Pizza">
             </div>
             <div style="width:65%">
               <h4>The Udacity Special</h4>
@@ -126,7 +133,7 @@
           </div>
           <div id="pizza1" class="randomPizzaContainer" style="width:33.33%; height: 325px;">
             <div style="width:35%">
-              <img src="images/pizza.png" class="img-responsive" alt="Pizza">
+              <img src="../dist/img/pizza_205.png" class="img-responsive" alt="Pizza">
             </div>
             <div style="width:65%">
               <h4>The Cameron Special</h4>

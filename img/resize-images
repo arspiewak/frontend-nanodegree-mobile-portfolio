@@ -1,0 +1,76 @@
+# resize-images:  A shell script to resize/compress image files.
+
+# Image processing through ImageMagick uses the smartresize function
+# defined in .bashrc (source credited in README.md). smartresize is
+# based on ImageMagick's mogrify command. mogrify is designed for
+# processing multiple files, but we use it because of a documented
+# bug in the convert command. Files are processed one at a time so
+# we can control renaming different sized outputs from the same
+# source.
+
+# Define smartresize the same way that an interactive session does
+source ~/.bashrc
+
+# Create the destination directories if not there.
+if [ -d "../dist" ]; then
+	echo ../dist exists
+else
+	mkdir ../dist
+	echo ../dist created
+fi
+
+if [ -d "../dist/css" ]; then
+	echo ../dist/css exists
+else
+	mkdir ../dist/css
+	echo ../dist/css created
+fi
+
+if [ -d "../dist/js" ]; then
+	echo ../dist/js exists
+else
+	mkdir ../dist/js
+	echo ../dist/js created
+fi
+
+if [ -d "../dist/img" ]; then
+	echo ../dist/img exists
+else
+	mkdir ../dist/img
+	echo ../dist/img created
+fi
+
+# For each file(filename, extension, pixelWidthOut [, sourcedir]):
+#	remove output file in dist directory, if it exists
+#	process input file to output file, sizing as needed
+#	rename the output file to include its width
+process_picture() {
+	rm ../dist/img/$1_$3.$2
+	smartresize $4$1.$2 $3 ../dist/img/
+	mv ../dist/img/$1.$2 ../dist/img/$1_$3.$2
+	echo File ../dist/img/$1_$3.$2 created
+}
+
+# now, work file by file
+process_picture profilepic jpg 70
+
+process_picture pizzeria jpg 100 ../views/images/	# index page
+process_picture pizzeria jpg 360 ../views/images/	# pizza page, desktop size
+process_picture pizzeria jpg 720 ../views/images/	# Pizza page, mobile size
+process_picture pizzeria jpg 1440 ../views/images/	# for double resolution
+
+process_picture pizza png 74 ../views/images/		# background movers
+process_picture pizza png 205 ../views/images/		# menu display
+
+process_picture cam_be_like jpg 482					# width OK, needs compression
+
+process_picture mobilewebdev jpg 610
+process_picture mobilewebdev jpg 784				# original width, compressed
+
+# file 2048.png is properly sized already. Just be sure it's in dest/
+if [ -a "../dist/img/2048.png" ]; then
+	echo File ../dist/img/2048.png exists
+else
+	cp 2048.png ../dist/img/
+	echo File 2048.png copied to ../dist/img/
+fi
