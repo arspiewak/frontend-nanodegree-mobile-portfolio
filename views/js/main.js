@@ -481,19 +481,25 @@ var resizePizzas = function(size) {
   console.log("Time to resize pizzas: " + timeToResize[timeToResize.length-1].duration + "ms");
 };
 
-window.performance.mark("mark_start_generating"); // collect timing data
+/*  To speed initial rendering, we delay the generation of pizza descriptions till after
 
-// This for-loop actually creates and appends all of the pizzas when the page loads
-var pizzasDiv = document.getElementById("randomPizzas");
-for (var i = 2; i < 100; i++) {
-  pizzasDiv.appendChild(pizzaElementGenerator(i));
+ */
+ function generatePizzaDisplay() {
+    window.performance.mark("mark_start_generating"); // collect timing data
+
+    // This for-loop actually creates and appends all of the pizzas when the page loads
+    var pizzasDiv = document.getElementById("randomPizzas");
+    for (var i = 2; i < 100; i++) {
+      pizzasDiv.appendChild(pizzaElementGenerator(i));
+    }
+
+    // User Timing API again. These measurements tell you how long it took to generate the initial pizzas
+    window.performance.mark("mark_end_generating");
+    window.performance.measure("measure_pizza_generation", "mark_start_generating", "mark_end_generating");
+    var timeToGenerate = window.performance.getEntriesByName("measure_pizza_generation");
+    console.log("Time to generate pizzas on load: " + timeToGenerate[0].duration + "ms");
 }
-
-// User Timing API again. These measurements tell you how long it took to generate the initial pizzas
-window.performance.mark("mark_end_generating");
-window.performance.measure("measure_pizza_generation", "mark_start_generating", "mark_end_generating");
-var timeToGenerate = window.performance.getEntriesByName("measure_pizza_generation");
-console.log("Time to generate pizzas on load: " + timeToGenerate[0].duration + "ms");
+window.addEventListener('load', generatePizzaDisplay);
 
 // Iterator for number of times the pizzas in the background have scrolled.
 // Used by updatePositions() to decide when to log the average time per frame
@@ -539,14 +545,16 @@ function updatePositions() {
 window.addEventListener('scroll', updatePositions);
 
 // Generates the sliding pizzas when the page loads.
-/*  The original version of this script created 200 pizza elements. They slide on "fixed"
-    "tracks" relative to the window, 8 to a track, so many of the tracks are invisible. All
+/*  The original version of this script created 200 pizza elements. They slide on "fixed
+    tracks" relative to the window, 8 to a track, so many of the tracks are invisible. All
     those invisible pizzas take time to load, animate, and manage. On my double monitors
     only 10 rows can be seen at stacked full-window height, so I only create 80 pizzas.
     That is sufficient for all reasonable situations.
 
+    Note: these pizzas have to be generated before initial rendering, as most of them
+    appear above the fold.
  */
- document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
   var pizzas = document.querySelector("#movingPizzas1");    // query moved from loop
