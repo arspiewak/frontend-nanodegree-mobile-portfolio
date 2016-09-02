@@ -368,12 +368,12 @@ var resizePizzas = function(size) {
 
       case "2":
         document.querySelector("#pizzaSize").innerHTML = "Medium";
-        newsize = 0.333;
+        newSize = 0.333;
         break;
 
       case "3":
         document.querySelector("#pizzaSize").innerHTML = "Large";
-        newsize = 0.5;
+        newSize = 0.5;
         break;
 
       default:
@@ -393,7 +393,7 @@ var resizePizzas = function(size) {
     var windowWidth = document.querySelector("#randomPizzas").offsetWidth;
     var oldSize = oldWidth / windowWidth;
     var dx = (newSize - oldSize) * windowWidth;
-    var newwidth = (oldWidth + dx) + 'px';
+    var newwidth = (oldWidth + dx) + "px";
 
   // Iterate through pizza elements on the page and change their widths
     for (var i = 0; i < len; i++) {
