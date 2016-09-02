@@ -357,47 +357,36 @@ var resizePizzas = function(size) {
 
   var pizzas = document.querySelectorAll(".randomPizzaContainer");
   var len = pizzas.length;
-  var newSize;
+  var newWidth;
 
   // Changes the value for the size of the pizza above the slider
+  /*  The original algorithm did a complicated calculation to get
+      the new container width in pixels. Setting a simple percentage
+      gives the same result within 2px (1%).
+   */
     switch(size) {
       case "1":
         document.querySelector("#pizzaSize").innerHTML = "Small";
-        newSize = 0.25;
+        newWidth = "25%";
         break;
 
       case "2":
         document.querySelector("#pizzaSize").innerHTML = "Medium";
-        newSize = 0.333;
+        newWidth = "33.33%";
         break;
 
       case "3":
         document.querySelector("#pizzaSize").innerHTML = "Large";
-        newSize = 0.5;
+        newWidth = "50%";
         break;
 
       default:
         console.log("bug in resizePizza size parameter");
     }
 
-    // Calculate the size difference to change a pizza element from one size to another
-    /*
-        All pizzas are the same size, so we calculate width for element 0.
-        The math here is wicked convoluted. It would be easier to understand if we
-        simplified it, storing permanent values instead of calculating them each time.
-        But this is executed once per frame, and its execution time won't impact
-        performance significantly. I'll stick to my mission.
-     */
-    var elem = pizzas[0];
-    var oldWidth = elem.offsetWidth;
-    var windowWidth = document.querySelector("#randomPizzas").offsetWidth;
-    var oldSize = oldWidth / windowWidth;
-    var dx = (newSize - oldSize) * windowWidth;
-    var newwidth = (oldWidth + dx) + "px";
-
   // Iterate through pizza elements on the page and change their widths
     for (var i = 0; i < len; i++) {
-      pizzas[i].style.width = newwidth;
+      pizzas[i].style.width = newWidth;
     }
 
   // User Timing API is awesome
