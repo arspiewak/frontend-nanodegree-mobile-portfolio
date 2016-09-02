@@ -7,7 +7,61 @@
   <meta name="author" content="Cameron Pittman. Performance optimization by Alan Spiewak">
   <meta name="mobile-web-app-capable" content="yes">
   <title>Cameron Pittman: Portfolio</title>
-  <link rel="stylesheet" href="css/style.css">
+  <!--link rel="stylesheet" href="css/style.css" -->
+  <style>
+/* /views/css/style.css */
+/** {
+  outline: 1px solid red !important;
+}*/
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -box-sizing: border-box;
+}
+
+body {
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
+  background: black;
+}
+
+input {
+  background: grey;
+  font-size: 18px;
+}
+
+form {
+  display: inline-block;
+}
+
+.centered {
+  text-align: center;
+}
+
+#pizzaSize {
+  font-weight: 800;
+}
+
+.mover {
+  position: fixed;
+  width: 256px;
+  z-index: -1;
+}
+
+.randomPizzaContainer {
+  float: left;
+  display: flex;
+}
+
+.randomPizzaContainer:after {
+  content: "";
+  display: table;
+  clear:both;
+}
+
+ .container {
+  background-color: rgba(240, 60, 60, 0.8);
+}
+  </style>
   <link rel="stylesheet" href="css/bootstrap-grid.css">
 </head>
 
@@ -150,6 +204,26 @@
     <div id="footer" class="col-md-12">Thanks for visiting! &copy; 2014 Udacity</div>
   </div>
   <script>
+
+
+    /*  Note: This scripting is inlined because the moving pizzas have to be generated
+        before initial rendering, as most of them appear above the fold. This allows the
+        rest of the scripted setup to be loaded asynchronously.
+    */
+
+    // Iterator for number of times the pizzas in the background have scrolled.
+    // Used by updatePositions() to decide when to log the average time per frame
+    var frame = 0;
+
+    // Logs the average amount of time per 10 frames needed to move the sliding background pizzas on scroll.
+    function logAverageFrame(times) {   // times is the array of User Timing measurements from updatePositions()
+      var numberOfEntries = times.length;
+      var sum = 0;
+      for (var i = numberOfEntries - 1; i > numberOfEntries - 11; i--) {
+        sum = sum + times[i].duration;
+      }
+      console.log("Average scripting time to generate last 10 frames: " + sum / 10 + "ms");
+    }
     // The following code for sliding background pizzas was pulled from Ilya's demo found at:
     // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
@@ -179,18 +253,14 @@
     // runs updatePositions on scroll
     window.addEventListener('scroll', updatePositions);
 
-
     // Generate the sliding pizzas when the page loads.
     /*  The original version of this function created 200 pizza elements. They slide on "fixed
         tracks" relative to the window, 8 to a track, so many of the 200 tracks are invisible.
         All those invisible pizzas take time to load, animate, and manage. On my double monitors
         only 10 rows can be seen at stacked full-window height, so I only create 80 pizzas.
         That is sufficient for all reasonable situations.
-
-        Note: These pizzas have to be generated before initial rendering, as some of them
-        appear above the fold.
      */
-    document.addEventListener('DOMContentLoaded', function() {
+    var generateMovingPizzas = function() {
       var cols = 8;
       var s = 256;
       var pizzas = document.querySelector("#movingPizzas1");    // query moved from loop
@@ -205,7 +275,8 @@
         pizzas.appendChild(elem);
       }
       updatePositions();
-    });
+    };
+    document.addEventListener('DOMContentLoaded', generateMovingPizzas);
   </script>
   <script async type="text/javascript" src="js/main.js"></script>
 </body>

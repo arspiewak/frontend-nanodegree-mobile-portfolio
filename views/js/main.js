@@ -427,20 +427,6 @@ var resizePizzas = function(size) {
 }
 window.addEventListener("load", generatePizzaDisplay);
 
-// Iterator for number of times the pizzas in the background have scrolled.
-// Used by updatePositions() to decide when to log the average time per frame
-var frame = 0;
-
-// Logs the average amount of time per 10 frames needed to move the sliding background pizzas on scroll.
-function logAverageFrame(times) {   // times is the array of User Timing measurements from updatePositions()
-  var numberOfEntries = times.length;
-  var sum = 0;
-  for (var i = numberOfEntries - 1; i > numberOfEntries - 11; i--) {
-    sum = sum + times[i].duration;
-  }
-  console.log("Average scripting time to generate last 10 frames: " + sum / 10 + "ms");
-}
-
 /*  Sliding pizzas are the only elements created by script that appear above
     the fold. Their generation has been inlined into the page's HTML so this
     script can load asynchronously.
