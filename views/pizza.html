@@ -46,7 +46,7 @@
              can offer the browser some pretty-high-res choices. Display width
              maxes out at 720px (mobile) and 360px (desktop). -->
         <img srcset="../dist/img/pizzeria_1440.jpg 1440w, ../dist/img/pizzeria_720.jpg 720w, ../dist/img/pizzeria_360.jpg 360w"
-          sizes="(min-width: 992) 360px, (min-width: 720) 720px, 100vw"
+          sizes="(min-width: 992px) 360px, (min-width: 720px) 720px, 100vw"
           src="../dist/img/pizzeria_720.jpg" class="img-responsive" alt="Pizzeria">
         <!-- Image credit to: http://commons.wikimedia.org/wiki/File:HK_TST_night_%E5%98%89%E8%98%AD%E9%81%93_Granville_Road_restaurant_Paisano's_Pizzeria_pizza_Dec-2013.JPG -->
       </div>
@@ -149,7 +149,65 @@
     </div>
     <div id="footer" class="col-md-12">Thanks for visiting! &copy; 2014 Udacity</div>
   </div>
-  <script type="text/javascript" src="js/main.js"></script>
+  <script>
+    // The following code for sliding background pizzas was pulled from Ilya's demo found at:
+    // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
+
+    // Moves the sliding background pizzas based on scroll position
+    function updatePositions() {
+      frame++;
+      window.performance.mark("mark_start_frame");
+
+      var items = document.querySelectorAll('.mover');
+      var len = items.length;
+      var top = document.body.scrollTop / 1250;     // DOM query removed from loop
+      for (var i = 0; i < len; i++) {
+        var phase = Math.sin(top + (i % 5));
+        items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+      }
+
+      // User Timing API to the rescue again. Seriously, it's worth learning.
+      // Super easy to create custom metrics.
+      window.performance.mark("mark_end_frame");
+      window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
+      if (frame % 10 === 0) {
+        var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
+        logAverageFrame(timesToUpdatePosition);
+      }
+    }
+
+    // runs updatePositions on scroll
+    window.addEventListener('scroll', updatePositions);
+
+
+    // Generate the sliding pizzas when the page loads.
+    /*  The original version of this function created 200 pizza elements. They slide on "fixed
+        tracks" relative to the window, 8 to a track, so many of the 200 tracks are invisible.
+        All those invisible pizzas take time to load, animate, and manage. On my double monitors
+        only 10 rows can be seen at stacked full-window height, so I only create 80 pizzas.
+        That is sufficient for all reasonable situations.
+
+        Note: These pizzas have to be generated before initial rendering, as some of them
+        appear above the fold.
+     */
+    document.addEventListener('DOMContentLoaded', function() {
+      var cols = 8;
+      var s = 256;
+      var pizzas = document.querySelector("#movingPizzas1");    // query moved from loop
+      for (var i = 0; i < 80; i++) {
+        var elem = document.createElement('img');
+        elem.className = 'mover';
+        elem.src = "../dist/img/pizza_74.png";
+        elem.style.height = "100px";
+        elem.style.width = "73.333px";
+        elem.basicLeft = (i % cols) * s;
+        elem.style.top = (Math.floor(i / cols) * s) + 'px';
+        pizzas.appendChild(elem);
+      }
+      updatePositions();
+    });
+  </script>
+  <script async type="text/javascript" src="js/main.js"></script>
 </body>
 
 </html>

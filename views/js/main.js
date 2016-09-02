@@ -162,7 +162,7 @@ String.prototype.capitalize = function() {
 };
 
 /*  Replaced case-based functions and string matching with a simple two-dimensional array. This chooses type and instance of nouns and adjectives
-    directly from a pair of numbers instead of comples string/case processing.
+    directly from a pair of numbers instead of complex string/case processing.
  */
 var globalAdjectiveList = [
 //    case 0, "dark":
@@ -441,58 +441,7 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
   console.log("Average scripting time to generate last 10 frames: " + sum / 10 + "ms");
 }
 
-// The following code for sliding background pizzas was pulled from Ilya's demo found at:
-// https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
-
-// Moves the sliding background pizzas based on scroll position
-function updatePositions() {
-  frame++;
-  window.performance.mark("mark_start_frame");
-
-  var items = document.querySelectorAll('.mover');
-  var len = items.length;
-  var top = document.body.scrollTop / 1250;     // DOM query removed from loop
-  for (var i = 0; i < len; i++) {
-    var phase = Math.sin(top + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
-  }
-
-  // User Timing API to the rescue again. Seriously, it's worth learning.
-  // Super easy to create custom metrics.
-  window.performance.mark("mark_end_frame");
-  window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
-  if (frame % 10 === 0) {
-    var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
-    logAverageFrame(timesToUpdatePosition);
-  }
-}
-
-// runs updatePositions on scroll
-window.addEventListener('scroll', updatePositions);
-
-// Generates the sliding pizzas when the page loads.
-/*  The original version of this script created 200 pizza elements. They slide on "fixed
-    tracks" relative to the window, 8 to a track, so many of the tracks are invisible. All
-    those invisible pizzas take time to load, animate, and manage. On my double monitors
-    only 10 rows can be seen at stacked full-window height, so I only create 80 pizzas.
-    That is sufficient for all reasonable situations.
-
-    Note: these pizzas have to be generated before initial rendering, as most of them
-    appear above the fold.
+/*  Sliding pizzas are the only elements created by script that appear above
+    the fold. Their generation has been inlined into the page's HTML so this
+    script can load asynchronously.
  */
-document.addEventListener('DOMContentLoaded', function() {
-  var cols = 8;
-  var s = 256;
-  var pizzas = document.querySelector("#movingPizzas1");    // query moved from loop
-  for (var i = 0; i < 80; i++) {
-    var elem = document.createElement('img');
-    elem.className = 'mover';
-    elem.src = "../dist/img/pizza_74.png";
-    elem.style.height = "100px";
-    elem.style.width = "73.333px";
-    elem.basicLeft = (i % cols) * s;
-    elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    pizzas.appendChild(elem);
-  }
-  updatePositions();
-});
