@@ -357,7 +357,7 @@ var resizePizzas = function(size) {
 
   var pizzas = document.querySelectorAll(".randomPizzaContainer");
   var len = pizzas.length;
-  var newWidth;
+  var newWidth = "";
 
   // Changes the value for the size of the pizza above the slider
   /*  The original algorithm did a complicated calculation to get
