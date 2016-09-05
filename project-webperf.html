@@ -11,7 +11,18 @@
     <!-- <link href="//fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet"> -->
 
     <link href="css/style.css" rel="stylesheet">
-    <link href="css/print.css" rel="stylesheet">
+    <!--link href="css/print.css" rel="stylesheet" media="print"
+        Inline the contents of print.css (it's tiny and seldom used) -->
+    <style media="print">
+      * { background: transparent !important; color: black !important; text-shadow: none !important; filter:none !important; -ms-filter: none !important; }
+      a, a:visited { color: #444 !important; text-decoration: underline; }
+      a[href]:after { content: " (" attr(href) ")"; }
+      tr, img { page-break-inside: avoid; }
+      img { max-width: 100% !important; }
+      @page { margin: 0.5cm; }
+      p, h2, h3 { orphans: 3; widows: 3; }
+      h2, h3{ page-break-after: avoid; }
+    </style>
 
     <!-- Google Analytics from https://developers.google.com/analytics/devguides/collection/analyticsjs/
       This currently supported snippet preloads Google Analytics. Degrades to synchronous/blocking load
