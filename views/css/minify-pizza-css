@@ -1,0 +1,2 @@
+cssnano bootstrap-grid.css ../../dist/css/bootstrap-grid-min.css
+cssnano style.css ../../dist/css/pizza-style-min.css

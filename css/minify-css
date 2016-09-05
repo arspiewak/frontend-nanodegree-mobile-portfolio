@@ -1,0 +1,2 @@
+cssnano style.css ../dist/css/style-min.css
+cssnano print.css ../dist/css/print-min.css
