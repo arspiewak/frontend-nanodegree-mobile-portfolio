@@ -7,7 +7,7 @@ My implementation of the portfolio site is run as a GitHub page instead of runni
 
 ### Rejected hosting options
 
-My PageSpeed score would be higher if I had specified caching strategies (especially `max-age` and `public`) in the HTML headers attached to my resource files by the page server. That can be specified for HTML files with the `<meta http-equiv="">` tag, but testing showed it had no impact on PageSpeed. Cache control needed to be implemented on resource files, and that can only be configured on the server. I did not want to spend the time learning how to run a server (I plan to learn that later within the Full Stack Nanodegree), so I had to let that optimizaton go.
+My PageSpeed score would be higher if I had specified caching strategies (especially `max-age` and `public`) in the HTML headers attached to my resource files by the page server. That can be specified for HTML files with the `<meta http-equiv="">` tag, but testing showed it had no impact on PageSpeed. Cache control needed to be implemented on resource files, and that can only be configured on the server. I did not want to spend the time learning how to run a server (I plan to learn that later within the Full Stack Nanodegree), so I had to let that optimization go.
 
 While it's not a hosting option, I should mention that I plan to learn `gulp` and use it to streamline my builds, but I didn't spend the time for its learning curve for this project. For now, I've just been devising shell scripts to automate certain tasks (merging `master` with `gh-pages` and pushing commits up to GitHub, optimizing image files, etc.). The shell scripts can be found in the directory from which they are executed, and they have a null extension.
 
@@ -75,7 +75,7 @@ I did not change the original design of serving the first three thumbnails for `
 
 ## 2. Delaying above-the-fold loads and processing
 
-For the pages that use Google analytics, I found an [updated JavaScript tracking snippet](https://developers.google.com/analytics/devguides/collection/analyticsjs/) that loads `analytics.js` aynchronously, getting it out of the critical rendering path.
+For the pages that use Google analytics, I found an [updated JavaScript tracking snippet](https://developers.google.com/analytics/devguides/collection/analyticsjs/) that loads `analytics.js` asynchronously, getting it out of the critical rendering path.
 
 In the pizzeria page, all of the randomly generated pizza descriptions appear below the fold. The only products of `main.js` visible in the initial render/paint are the sliding pizzas. So I inlined the generation and painting for those images at the end of `index.html`, and made loading the rest of `main.js` asynchronous. Its load was moved to the end of the HTML file to get it out of the way of DOM rendering as much as possible.
 
